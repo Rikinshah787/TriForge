@@ -3,133 +3,192 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>MedGuard Control Room</title>
+    <title>MedForge — Care Command</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,520;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
-    <main class="shell">
-      <section class="control">
+    <div class="atmosphere" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
         <div>
-          <p class="eyebrow">MedGuard agent control room</p>
-          <h1>Reminders assume action. MedGuard watches what happens when action never comes.</h1>
-          <p class="lede">Trigger a missed dose and watch the Orchestrator fan out to four investigators, correlate evidence, then hold at the human approval gate.</p>
+          <p class="brand-name">MedForge</p>
+          <p class="brand-sub">Missed-dose safety · live TrueForge</p>
         </div>
+      </div>
+      <div class="top-meta">
+        <div><span>Session</span><strong id="session-id">idle</strong></div>
+        <div><span>Stage</span><strong id="stage-label">Ready</strong></div>
+        <div><span>Engine</span><strong id="engine-label">TrueForge</strong></div>
+        <div><span>Runtime</span><strong id="runtime">0.0s</strong></div>
+      </div>
+    </header>
 
-        <form id="missed-dose-form" class="trigger-panel">
-          <label>
-            Patient
-            <select id="patient">
-              <option value="eleanor">Eleanor Shah</option>
-              <option value="marcus">Marcus Lee</option>
-              <option value="rosa">Rosa Alvarez</option>
-            </select>
-          </label>
+    <div class="shell">
+      <nav class="side-tabs" aria-label="Views">
+        <button type="button" class="side-tab active" data-tab="run">Run</button>
+        <button type="button" class="side-tab" data-tab="patient">Patient</button>
+        <button type="button" class="side-tab" data-tab="agents">Agents</button>
+        <button type="button" class="side-tab" data-tab="trueforge">TrueForge</button>
+      </nav>
 
-          <label>
-            Medication
-            <select id="medication">
-              <option value="apixaban">Apixaban</option>
-              <option value="metformin">Metformin</option>
-              <option value="vitamin-d">Vitamin D</option>
-            </select>
-          </label>
+      <main class="tab-panels">
+        <section class="tab-panel active" data-panel="run">
+          <ol class="pipeline" id="pipeline">
+            <li data-step="reminder" class="active"><span>1</span><div><strong>Reminder call</strong><small>Talk / listen</small></div></li>
+            <li data-step="converse"><span>2</span><div><strong>Ack</strong><small>We’ll check</small></div></li>
+            <li data-step="investigate"><span>3</span><div><strong>Live agents</strong><small>Risk score</small></div></li>
+            <li data-step="escalate"><span>4</span><div><strong>Call Anika</strong><small>If severity high</small></div></li>
+          </ol>
 
-          <label>
-            Wellness check-in text
-            <input id="wellness-text" value="I am not sure if I took it. I feel dizzy and confused.">
-          </label>
-
-          <button type="submit">Start missed-dose investigation</button>
-        </form>
-      </section>
-
-      <section class="status-strip" aria-label="Session status">
-        <div>
-          <span>Session</span>
-          <strong id="session-id">idle</strong>
-        </div>
-        <div>
-          <span>Mode</span>
-          <strong>human-gated</strong>
-        </div>
-        <div>
-          <span>Runtime</span>
-          <strong id="runtime">0.0s</strong>
-        </div>
-        <div>
-          <span>Audit</span>
-          <strong id="audit-count">0 records</strong>
-        </div>
-      </section>
-
-      <section class="grid">
-        <article class="agent-card" data-agent="schedule">
-          <div class="card-head">
-            <span class="pulse"></span>
-            <h2>Schedule Investigator</h2>
-          </div>
-          <p class="summary">Waiting for missed-dose event.</p>
-          <dl></dl>
-        </article>
-
-        <article class="agent-card" data-agent="clinical">
-          <div class="card-head">
-            <span class="pulse"></span>
-            <h2>Clinical Risk Investigator</h2>
-          </div>
-          <p class="summary">Waiting for medication risk lookup.</p>
-          <dl></dl>
-        </article>
-
-        <article class="agent-card" data-agent="pharmacy">
-          <div class="card-head">
-            <span class="pulse"></span>
-            <h2>Pharmacy Investigator</h2>
-          </div>
-          <p class="summary">Waiting for refill check.</p>
-          <dl></dl>
-        </article>
-
-        <article class="agent-card" data-agent="wellness">
-          <div class="card-head">
-            <span class="pulse"></span>
-            <h2>Wellness Investigator</h2>
-          </div>
-          <p class="summary">Waiting for check-in interpretation.</p>
-          <dl></dl>
-        </article>
-      </section>
-
-      <section class="decision">
-        <div class="risk-block">
-          <div class="gauge" aria-label="Risk score">
-            <svg viewBox="0 0 120 120" role="img">
-              <circle class="track" cx="60" cy="60" r="48"></circle>
-              <circle id="risk-ring" class="meter" cx="60" cy="60" r="48"></circle>
-            </svg>
-            <div>
-              <span id="risk-score">0</span>
-              <small>risk score</small>
+          <div class="demo-bar" id="demo-bar">
+            <p class="eyebrow">Demo · converse → check → call if high</p>
+            <div class="demo-actions">
+              <button type="button" id="btn-demo-ok" class="secondary">A · Feeling fine</button>
+              <button type="button" id="btn-demo-noanswer" class="secondary">B · No answer</button>
+              <button type="button" id="btn-demo-distress" class="primary">C · Dizzy / missed</button>
             </div>
+            <p class="tiny" id="demo-hint">Live call: say “I missed it and feel dizzy” → phone says OK we’ll check → agents run → high risk calls Anika in seconds.</p>
           </div>
-          <div>
-            <p class="eyebrow">Correlation Agent</p>
-            <h2 id="risk-title">Awaiting evidence</h2>
-            <p id="risk-narrative">The approval gate opens after all investigators return a typed result.</p>
-          </div>
-        </div>
 
-        <div class="gate">
-          <p class="eyebrow">Human Approval Gate</p>
-          <div class="actions">
-            <button class="secondary" data-action="call" disabled>Call caregiver</button>
-            <button class="secondary" data-action="alert" disabled>Send alert</button>
-            <button class="secondary" data-action="dismiss" disabled>Dismiss</button>
+          <section class="dose-panel">
+            <div class="dose-head">
+              <p class="eyebrow">Today’s dose log</p>
+              <button type="button" id="btn-dose-refresh" class="ghost">Refresh</button>
+            </div>
+            <ul class="dose-list" id="dose-list"></ul>
+            <p class="tiny" id="dose-hint">Statuses update from chart + call (taken / due / missed).</p>
+          </section>
+
+          <div class="run-bar">
+            <button type="button" id="btn-reminder" class="ghost">Live reminder call</button>
+            <button type="button" id="btn-investigate" class="ghost" disabled>Investigate only</button>
           </div>
-          <ol id="audit-log"></ol>
-        </div>
-      </section>
-    </main>
+
+          <section class="decision-band">
+            <div class="risk-block">
+              <div class="gauge" aria-label="Risk score">
+                <svg viewBox="0 0 120 120" role="img">
+                  <circle class="track" cx="60" cy="60" r="48"></circle>
+                  <circle id="risk-ring" class="meter" cx="60" cy="60" r="48"></circle>
+                </svg>
+                <div>
+                  <span id="risk-score">0</span>
+                  <small>risk</small>
+                </div>
+              </div>
+              <div>
+                <p class="eyebrow">Status</p>
+                <h2 id="risk-title">Pipeline ready</h2>
+                <p id="risk-narrative">Run A, B, or C for the demo video. Risk score updates after live investigators finish.</p>
+                <p id="reminder-status" class="status-line">No run yet.</p>
+                <p class="tiny" id="call-sid"></p>
+              </div>
+            </div>
+            <div class="audit-block">
+              <p class="eyebrow">Audit</p>
+              <ol id="audit-log"></ol>
+            </div>
+          </section>
+        </section>
+
+        <section class="tab-panel" data-panel="patient">
+          <aside class="profile-panel flat">
+            <p class="eyebrow">Patient profile</p>
+            <h1 id="patient-name">Eleanor Shah</h1>
+            <p class="profile-lede" id="patient-lede">78 · Brooklyn, NY · Caregiver Anika Shah</p>
+            <div class="chip-row" id="condition-chips"></div>
+            <section class="panel-block">
+              <h2>Today’s dose log</h2>
+              <ul class="dose-list" id="dose-list-patient"></ul>
+            </section>
+            <section class="panel-block">
+              <h2>Today’s medicine schedule</h2>
+              <ul class="schedule-list" id="schedule-list"></ul>
+            </section>
+            <section class="panel-block">
+              <h2>Medicine stock</h2>
+              <ul class="stock-list" id="stock-list"></ul>
+            </section>
+            <section class="panel-block">
+              <h2>Diagnostics & notes</h2>
+              <dl class="diag-list" id="diag-list"></dl>
+            </section>
+          </aside>
+        </section>
+
+        <section class="tab-panel" data-panel="agents">
+          <div class="agent-grid">
+            <article class="agent-card" data-agent="calling">
+              <div class="card-head"><span class="pulse"></span><h2>Calling</h2></div>
+              <p class="summary" id="calling-summary">Twilio reminder / caregiver call.</p>
+            </article>
+            <article class="agent-card" data-agent="schedule">
+              <div class="card-head"><span class="pulse"></span><h2>Scheduling</h2><span class="live-tag">live</span></div>
+              <p class="summary">Miss pattern.</p>
+              <dl></dl>
+            </article>
+            <article class="agent-card" data-agent="clinical">
+              <div class="card-head"><span class="pulse"></span><h2>Clinical</h2><span class="live-tag">live</span></div>
+              <p class="summary">RxNav / openFDA.</p>
+              <dl></dl>
+            </article>
+            <article class="agent-card" data-agent="pharmacy">
+              <div class="card-head"><span class="pulse"></span><h2>Pharmacy</h2><span class="live-tag">live</span></div>
+              <p class="summary">Refill / stock.</p>
+              <dl></dl>
+            </article>
+            <article class="agent-card" data-agent="wellness">
+              <div class="card-head"><span class="pulse"></span><h2>Wellness</h2><span class="live-tag">live</span></div>
+              <p class="summary">Distress signals.</p>
+              <dl></dl>
+            </article>
+            <article class="agent-card" data-agent="correlation">
+              <div class="card-head"><span class="pulse"></span><h2>Correlation</h2><span class="live-tag">live</span></div>
+              <p class="summary" id="corr-summary">One risk score + brief.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-panel="trueforge">
+          <section class="trueforge-panel" id="trueforge-panel">
+            <div class="trueforge-head">
+              <div>
+                <p class="eyebrow">TrueForge live · SQLite</p>
+                <h2 id="tf-status-title">Connecting…</h2>
+                <p class="tiny" id="tf-status-note">Agents, schedules, sessions.</p>
+              </div>
+              <div class="trueforge-links">
+                <a id="tf-library-link" href="http://localhost:8790/library" target="_blank" rel="noreferrer">Library</a>
+                <a id="tf-schedules-link" href="http://localhost:8790/schedules" target="_blank" rel="noreferrer">Schedules</a>
+                <a id="tf-sessions-link" href="http://localhost:8790/sessions" target="_blank" rel="noreferrer">Sessions</a>
+                <button type="button" id="btn-tf-refresh" class="ghost">Refresh</button>
+              </div>
+            </div>
+            <div class="schedule-bar compact">
+              <p id="schedule-status">Schedule not linked.</p>
+              <div class="schedule-actions">
+                <button type="button" id="btn-schedule-ensure" class="secondary">Link schedule</button>
+                <button type="button" id="btn-schedule-run" class="ghost" disabled>Run now</button>
+              </div>
+            </div>
+            <div class="trueforge-grid">
+              <div><h3>Agents</h3><ul id="tf-agent-list"></ul></div>
+              <div><h3>Schedules</h3><ul id="tf-schedule-list"></ul></div>
+              <div><h3>Sessions</h3><ul id="tf-session-list"></ul></div>
+            </div>
+            <div class="trueforge-run" id="tf-run-box" hidden>
+              <h3>This run’s TrueForge sessions</h3>
+              <ul id="tf-run-list"></ul>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
 
     <script src="./script.js"></script>
   </body>

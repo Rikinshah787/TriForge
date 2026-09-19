@@ -1,8 +1,8 @@
 {
-  "name": "medguard-agent-demo",
+  "name": "medforge-agent-demo",
   "version": "0.1.0",
   "private": true,
-  "description": "Local MedGuard agent demo with orchestrator, investigators, approval gate, and audit log.",
+  "description": "Local MedForge agent demo with orchestrator, investigators, approval gate, and audit log.",
   "scripts": {
     "start": "node server.js",
     "check": "node --check server.js && node --check script.js"
