@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MedGuard Control Room</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="control">
+        <div>
+          <p class="eyebrow">MedGuard agent control room</p>
+          <h1>Reminders assume action. MedGuard watches what happens when action never comes.</h1>
+          <p class="lede">Trigger a missed dose and watch the Orchestrator fan out to four investigators, correlate evidence, then hold at the human approval gate.</p>
+        </div>
+
+        <form id="missed-dose-form" class="trigger-panel">
+          <label>
+            Patient
+            <select id="patient">
+              <option value="eleanor">Eleanor Shah</option>
+              <option value="marcus">Marcus Lee</option>
+              <option value="rosa">Rosa Alvarez</option>
+            </select>
+          </label>
+
+          <label>
+            Medication
+            <select id="medication">
+              <option value="apixaban">Apixaban</option>
+              <option value="metformin">Metformin</option>
+              <option value="vitamin-d">Vitamin D</option>
+            </select>
+          </label>
+
+          <label>
+            Wellness check-in text
+            <input id="wellness-text" value="I am not sure if I took it. I feel dizzy and confused.">
+          </label>
+
+          <button type="submit">Start missed-dose investigation</button>
+        </form>
+      </section>
+
+      <section class="status-strip" aria-label="Session status">
+        <div>
+          <span>Session</span>
+          <strong id="session-id">idle</strong>
+        </div>
+        <div>
+          <span>Mode</span>
+          <strong>human-gated</strong>
+        </div>
+        <div>
+          <span>Runtime</span>
+          <strong id="runtime">0.0s</strong>
+        </div>
+        <div>
+          <span>Audit</span>
+          <strong id="audit-count">0 records</strong>
+        </div>
+      </section>
+
+      <section class="grid">
+        <article class="agent-card" data-agent="schedule">
+          <div class="card-head">
+            <span class="pulse"></span>
+            <h2>Schedule Investigator</h2>
+          </div>
+          <p class="summary">Waiting for missed-dose event.</p>
+          <dl></dl>
+        </article>
+
+        <article class="agent-card" data-agent="clinical">
+          <div class="card-head">
+            <span class="pulse"></span>
+            <h2>Clinical Risk Investigator</h2>
+          </div>
+          <p class="summary">Waiting for medication risk lookup.</p>
+          <dl></dl>
+        </article>
+
+        <article class="agent-card" data-agent="pharmacy">
+          <div class="card-head">
+            <span class="pulse"></span>
+            <h2>Pharmacy Investigator</h2>
+          </div>
+          <p class="summary">Waiting for refill check.</p>
+          <dl></dl>
+        </article>
+
+        <article class="agent-card" data-agent="wellness">
+          <div class="card-head">
+            <span class="pulse"></span>
+            <h2>Wellness Investigator</h2>
+          </div>
+          <p class="summary">Waiting for check-in interpretation.</p>
+          <dl></dl>
+        </article>
+      </section>
+
+      <section class="decision">
+        <div class="risk-block">
+          <div class="gauge" aria-label="Risk score">
+            <svg viewBox="0 0 120 120" role="img">
+              <circle class="track" cx="60" cy="60" r="48"></circle>
+              <circle id="risk-ring" class="meter" cx="60" cy="60" r="48"></circle>
+            </svg>
+            <div>
+              <span id="risk-score">0</span>
+              <small>risk score</small>
+            </div>
+          </div>
+          <div>
+            <p class="eyebrow">Correlation Agent</p>
+            <h2 id="risk-title">Awaiting evidence</h2>
+            <p id="risk-narrative">The approval gate opens after all investigators return a typed result.</p>
+          </div>
+        </div>
+
+        <div class="gate">
+          <p class="eyebrow">Human Approval Gate</p>
+          <div class="actions">
+            <button class="secondary" data-action="call" disabled>Call caregiver</button>
+            <button class="secondary" data-action="alert" disabled>Send alert</button>
+            <button class="secondary" data-action="dismiss" disabled>Dismiss</button>
+          </div>
+          <ol id="audit-log"></ol>
+        </div>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>

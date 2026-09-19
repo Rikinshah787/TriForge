@@ -1,0 +1,38 @@
+[
+  {
+    "id": "audit-1789847211899",
+    "created_at": "2026-09-19T19:46:51.899Z",
+    "session_id": "mg-201264",
+    "action": "call",
+    "actor": "human-approver",
+    "agent": "escalation-agent",
+    "result": "Queued caregiver call."
+  },
+  {
+    "id": "audit-1789847210952",
+    "created_at": "2026-09-19T19:46:50.952Z",
+    "session_id": "mg-201264",
+    "action": "dismiss",
+    "actor": "human-approver",
+    "agent": "escalation-agent",
+    "result": "Dismissed with audit trail."
+  },
+  {
+    "id": "audit-1789847209584",
+    "created_at": "2026-09-19T19:46:49.584Z",
+    "session_id": "mg-201264",
+    "action": "alert",
+    "actor": "human-approver",
+    "agent": "escalation-agent",
+    "result": "Queued caregiver alert."
+  },
+  {
+    "id": "audit-1789846916755",
+    "created_at": "2026-09-19T19:41:56.755Z",
+    "session_id": "mg-demo",
+    "action": "call",
+    "actor": "human-approver",
+    "agent": "escalation-agent",
+    "result": "Queued caregiver call."
+  }
+]
