@@ -119,7 +119,7 @@ async function orchestrateMissedDose(input) {
   const startedAt = new Date().toISOString();
   const investigators = await Promise.all([
     withLatency(() => scheduleInvestigator(context), 260),
-    withLatency(() => clinicalRiskInvestigator(context), 420),
+    clinicalRiskInvestigator(context),
     withLatency(() => pharmacyInvestigator(context), 330),
     withLatency(() => wellnessInvestigator(context), 520)
   ]);
@@ -161,17 +161,65 @@ function scheduleInvestigator({ patient, medication }) {
   });
 }
 
-function clinicalRiskInvestigator({ medication }) {
+async function clinicalRiskInvestigator({ medication }) {
   const risk = medicationRisk[medication];
+  const publicDrugData = await lookupPublicDrugData(medication);
   return agentResult({
     agent: "clinical-risk-investigator",
     severity: risk.severity,
-    confidence: 0.81,
+    confidence: publicDrugData.live ? 0.9 : 0.81,
     score: risk.score,
     summary: risk.summary,
-    evidence: risk.evidence,
+    evidence: [
+      ...risk.evidence,
+      {
+        label: "RxNav lookup",
+        value: publicDrugData.rxcui
+          ? `Resolved ${labelMedication(medication)} to RxCUI ${publicDrugData.rxcui}`
+          : "Unavailable — using versioned medication-risk skill fallback"
+      },
+      {
+        label: "OpenFDA label",
+        value: publicDrugData.labelFound
+          ? "Public label record found"
+          : "Unavailable — no live label used for this assessment"
+      }
+    ],
+    source: publicDrugData.live ? "live_public_api" : "versioned_fallback",
     recommended_action: risk.severity === "high" ? "Require human review." : "Add context to correlation."
   });
+}
+
+async function lookupPublicDrugData(medication) {
+  // A missing or slow public service must never stop a safety investigation.
+  // The versioned medication-risk skill remains the deterministic fallback.
+  const encodedMedication = encodeURIComponent(labelMedication(medication));
+  const [rxnav, openfda] = await Promise.allSettled([
+    fetchJson(`https://rxnav.nlm.nih.gov/REST/rxcui.json?name=${encodedMedication}`),
+    fetchJson(`https://api.fda.gov/drug/label.json?search=openfda.generic_name:%22${encodedMedication}%22&limit=1`)
+  ]);
+
+  const rxcui = rxnav.status === "fulfilled"
+    ? rxnav.value?.idGroup?.rxnormId?.[0] || null
+    : null;
+  const labelFound = openfda.status === "fulfilled" && Array.isArray(openfda.value?.results);
+
+  return { rxcui, labelFound, live: Boolean(rxcui || labelFound) };
+}
+
+async function fetchJson(url) {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 1400);
+  try {
+    const response = await fetch(url, {
+      headers: { accept: "application/json" },
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`Public API responded ${response.status}`);
+    return response.json();
+  } finally {
+    clearTimeout(timeout);
+  }
 }
 
 function pharmacyInvestigator({ patient }) {
