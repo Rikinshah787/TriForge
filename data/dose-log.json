@@ -1,0 +1,116 @@
+{
+  "updated_at": "2026-09-19T23:15:52.500Z",
+  "patients": {
+    "eleanor": {
+      "days": {
+        "2026-09-19": {
+          "date": "2026-09-19",
+          "doses": [
+            {
+              "id": "eleanor-2026-09-19-apixaban-08:00-0",
+              "time": "08:00",
+              "medication_id": "apixaban",
+              "medication": "Apixaban 5mg",
+              "criticality": "critical",
+              "status": "missed",
+              "source": "call+chart",
+              "updated_at": "2026-09-19T23:15:52.499Z",
+              "note": "Symptoms on call: I am not feeling well and dizzy. Chart marked not taken (elder not asked to recall).",
+              "session_id": "mg-742242"
+            },
+            {
+              "id": "eleanor-2026-09-19-apixaban-20:00-1",
+              "time": "20:00",
+              "medication_id": "apixaban",
+              "medication": "Apixaban 5mg",
+              "criticality": "critical",
+              "status": "upcoming",
+              "source": "chart",
+              "updated_at": "2026-09-19T22:29:44.652Z",
+              "note": null,
+              "session_id": null
+            },
+            {
+              "id": "eleanor-2026-09-19-lisinopril-09:00-2",
+              "time": "09:00",
+              "medication_id": "lisinopril",
+              "medication": "Lisinopril 10mg",
+              "criticality": "important",
+              "status": "taken",
+              "source": "chart",
+              "updated_at": "2026-09-19T22:29:44.652Z",
+              "note": null,
+              "session_id": null
+            }
+          ]
+        }
+      }
+    },
+    "marcus": {
+      "days": {
+        "2026-09-19": {
+          "date": "2026-09-19",
+          "doses": [
+            {
+              "id": "marcus-2026-09-19-metformin-07:30-0",
+              "time": "07:30",
+              "medication_id": "metformin",
+              "medication": "Metformin 500mg",
+              "criticality": "important",
+              "status": "due",
+              "source": "chart",
+              "updated_at": "2026-09-19T22:29:44.662Z",
+              "note": null,
+              "session_id": null
+            },
+            {
+              "id": "marcus-2026-09-19-metformin-19:30-1",
+              "time": "19:30",
+              "medication_id": "metformin",
+              "medication": "Metformin 500mg",
+              "criticality": "important",
+              "status": "upcoming",
+              "source": "chart",
+              "updated_at": "2026-09-19T22:29:44.662Z",
+              "note": null,
+              "session_id": null
+            }
+          ]
+        }
+      }
+    },
+    "rosa": {
+      "days": {
+        "2026-09-19": {
+          "date": "2026-09-19",
+          "doses": [
+            {
+              "id": "rosa-2026-09-19-apixaban-08:00-0",
+              "time": "08:00",
+              "medication_id": "apixaban",
+              "medication": "Apixaban 5mg",
+              "criticality": "critical",
+              "status": "due",
+              "source": "chart",
+              "updated_at": "2026-09-19T22:29:44.671Z",
+              "note": null,
+              "session_id": null
+            },
+            {
+              "id": "rosa-2026-09-19-vitamin-d-21:00-1",
+              "time": "21:00",
+              "medication_id": "vitamin-d",
+              "medication": "Vitamin D",
+              "criticality": "low",
+              "status": "upcoming",
+              "source": "chart",
+              "updated_at": "2026-09-19T22:29:44.671Z",
+              "note": null,
+              "session_id": null
+            }
+          ]
+        }
+      }
+    }
+  }
+}
